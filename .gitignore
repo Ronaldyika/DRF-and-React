@@ -1,1 +1,5 @@
 venv
+watchmate/db.sqlite3
+watchmate/__pycache__/
+watchmate/watchmate/__pycache__/
+
