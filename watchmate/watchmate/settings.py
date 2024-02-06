@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'watchlist_app',
     'django.contrib.staticfiles',
+    'rest_framework.authtoken',
+    'user_app'
 ]
 
 MIDDLEWARE = [
@@ -78,7 +80,8 @@ WSGI_APPLICATION = 'watchmate.wsgi.application'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication'
         # 'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.TokenAuthentication',  # Corrected spelling here
     ],
