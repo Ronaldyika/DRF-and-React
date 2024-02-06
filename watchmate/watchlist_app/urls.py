@@ -4,7 +4,7 @@ urlpatterns = [
      path('list/',WatchList.as_view(),name='movie-list'),
      path('list/<int:pk>/',WatchList.as_view(),name='movie_detail'),
      
-     path('stream',StreamplateformList.as_view(),name='stream_list'),
+     path('stream/',StreamplateformList.as_view(),name='stream_list'),
      path('stream/<int:pk>/',StreamplateformDetails.as_view(),name='stream_detail'),
      
     #  path('review',ReviewList.as_view(),name='review_list'),

@@ -5,12 +5,12 @@ from .serializers import ReviewSerializer,WatchlistSerializer,StreamplateformSer
 from .models import Review,Watchlist,StreamPlateform
 # from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly
 from rest_framework.permissions import IsAdminUser,IsAuthenticated,IsAuthenticatedOrReadOnly
-from .permissions import ReviewUserOrReadOnly
+from .permissions import IsReviewUserOrReadOnly,IsAdminOrReadOnly
 
 class ReviewCreate(generics.CreateAPIView):
     
     serializer_class = ReviewSerializer
-    
+    permission_classes =[IsAuthenticated]
     def perform_create(self,serializer):
         pk = self.kwargs.get('pk')
         watchlist = Watchlist.objects.get(pk=pk)
@@ -31,28 +31,32 @@ class ReviewCreate(generics.CreateAPIView):
 class WatchList(generics.ListCreateAPIView):
     queryset = Watchlist.objects.all()
     serializer_class  = WatchlistSerializer
-    permission_classes =[IsAuthenticated]
+    permission_classes =[IsAdminOrReadOnly]
     
 class WatchDetails(generics.RetrieveUpdateDestroyAPIView):
     queryset = Watchlist.objects.all()
     serializer_class  = WatchlistSerializer
 
+    permission_classes =[IsAdminOrReadOnly]
+
 class StreamplateformList(generics.ListCreateAPIView):
+    serializer_class = [IsAdminOrReadOnly]
+
     queryset = StreamPlateform.objects.all()
     serializer_class  = StreamplateformSerializer
 
-    serializer_class = [IsAuthenticated]
     
 class StreamplateformDetails(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = [IsAdminOrReadOnly]
     queryset = StreamPlateform.objects.all()
     serializer_class  = StreamplateformSerializer
-    serializer_class = [IsAuthenticated]
 
 
 
 class ReviewList(generics.ListCreateAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [IsAdminOrReadOnly]
     
     def  get_queryset(self):
         pk = self.kwargs['pk']
@@ -63,4 +67,4 @@ class ReviewDetails(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-    permission_classes =[ReviewUserOrReadOnly]
+    permission_classes =[IsReviewUserOrReadOnly]
