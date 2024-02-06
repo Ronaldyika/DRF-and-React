@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework.throttling import UserRateThrottle,AnonRateThrottle
 from rest_framework.exceptions import ValidationError
 from rest_framework  import generics
 from .serializers import ReviewSerializer,WatchlistSerializer,StreamplateformSerializer
@@ -68,3 +69,4 @@ class ReviewDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
 
     permission_classes =[IsReviewUserOrReadOnly]
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
