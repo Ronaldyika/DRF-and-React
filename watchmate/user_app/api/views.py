@@ -11,24 +11,22 @@ def logout_user(request):
         request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)
 
-
-@api_view(['POST',])
+@api_view(['POST'])
 def registration_view(request):
     if request.method == "POST":
-        serializer = RegistrationSerializer(data = request.data)
-        
+        serializer = RegistrationSerializer(data=request.data)
         data = {}
-        
+
         if serializer.is_valid():
             account = serializer.save()
-
-            data['response'] = 'Registration Successfull'
+            data['response'] = 'Registration Successful'
             data['username'] = account.username
-            data['email']=account.email
+            data['email'] = account.email
+            token, created = Token.objects.get_or_create(user=account)
+            data['token'] = token.key
 
-            token = Token.objects.get(user=account).key
-            data['token'] = token
+            return Response(data, status=status.HTTP_201_CREATED)
         else:
-            data = serializer.errors
-        return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         
