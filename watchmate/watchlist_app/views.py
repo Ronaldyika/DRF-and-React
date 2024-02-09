@@ -7,9 +7,13 @@ from .models import Review,Watchlist,StreamPlateform
 # from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly
 from rest_framework.permissions import IsAdminUser,IsAuthenticated,IsAuthenticatedOrReadOnly
 from .permissions import IsReviewUserOrReadOnly,IsAdminOrReadOnly
+from drf_yasg.utils import swagger_auto_schema
+
 
 class ReviewCreate(generics.CreateAPIView):
     
+    # @swagger_auto_schema(operation_summary = "create review")
+
     serializer_class = ReviewSerializer
     permission_classes =[IsAuthenticated]
     def perform_create(self,serializer):

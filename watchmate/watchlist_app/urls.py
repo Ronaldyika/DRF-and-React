@@ -1,5 +1,6 @@
-from django.urls import path
+from django.urls import path,re_path
 from .views import ReviewList,ReviewDetails,WatchList,WatchDetails,ReviewCreate,StreamplateformList,StreamplateformDetails
+
 urlpatterns = [
      path('list/',WatchList.as_view(),name='movie-list'),
      path('list/<int:pk>/',WatchList.as_view(),name='movie_detail'),
@@ -9,10 +10,9 @@ urlpatterns = [
      
     #  path('review',ReviewList.as_view(),name='review_list'),
     #  path('review/<int:pk>/',ReviewDetails.as_view(),name='review_details'),  
-        
-     path('<int:pk>/review-create',ReviewCreate.as_view(),name='review_create'),
-     path('<int:pk>/reviews',ReviewList.as_view(),name='review_list'),
-     path('review/<int:pk>/',ReviewDetails.as_view(),name='review_details'),
-     
+                
+    path('<int:pk>/review-create',ReviewCreate.as_view(),name='review_create'),
+    path('<int:pk>/reviews',ReviewList.as_view(),name='review_list'),
+    path('review/<int:pk>/',ReviewDetails.as_view(),name='review_details'),
      
 ]

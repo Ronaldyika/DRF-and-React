@@ -41,7 +41,10 @@ INSTALLED_APPS = [
     'watchlist_app',
     'django.contrib.staticfiles',
     'rest_framework.authtoken',
-    'user_app'
+    'user_app',
+
+    # 'third party'
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -152,3 +155,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'USE_SESSION_AUTH': False,  # Disable Django Rest Framework's default session authentication
+    'APIS_SORTER': 'alpha',
+    'DOC_EXPANSION': 'none',
+    'OPERATIONS_SORTER': 'alpha',
+}
