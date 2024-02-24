@@ -1,0 +1,46 @@
+body{
+  background-color: #1f1e1e;
+  color: white;
+  overflow: hidden;
+}
+
+.App{
+  width: fit-content;
+  float: left;
+  margin-top: 4%;
+  margin-left: 30%;
+}
+.todo-input{
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+input{
+  width: 95%;
+  height: 4vh;
+}
+input:focus{
+  outline: 1px solid rgb(190, 87, 87);
+
+
+}
+
+.primaryBtn{
+  background-color: green;
+  outline: 0px;
+  margin-top: 18px;
+  height: 5vh;
+  border: 0px;
+}
+.primaryBtn:hover{
+  background-color: rgb(8, 39, 8);
+}
+.btnitem{
+  background-color: #1f1e1e;
+  margin-left: 8px;
+  border: 0px;
+  height: 5vh;
+  color: white;
+}
