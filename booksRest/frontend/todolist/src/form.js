@@ -14,10 +14,8 @@ export function Form(){
                 <div className="useremail">
                     <label>UserEmail</label>
                     <input type="email" placeholder="input email" className="formcontentitem"/>
-                </div>
-                <div className="primaryBtn">
+                </div><br></br>
                     <button>Submit</button>
-                </div>
             </div>
             <div className="btnarea">
                 <button >register</button>

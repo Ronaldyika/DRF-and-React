@@ -9,6 +9,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth import get_user_model
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import authenticate
+from rest_framework.permissions import IsAuthenticated
 
 
 # --------------------------start of communication view ----------------------------------------
@@ -98,11 +99,16 @@ class UserLoginView(ObtainAuthToken):
 class ProductListView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
+
 
 class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
+
 
 class CartItemView(generics.ListCreateAPIView):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
+    permission_classes = [IsAuthenticated]

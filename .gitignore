@@ -2,4 +2,7 @@ venv
 watchmate/db.sqlite3
 watchmate/__pycache__/
 watchmate/watchmate/__pycache__/
+e-commerce/ecommerce/__pycache__/
+ecommerce/__pycache__/
+e-commerce/ecommerce/api/migrations/
 
