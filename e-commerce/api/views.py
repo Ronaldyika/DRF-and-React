@@ -1,8 +1,17 @@
 from django.shortcuts import render
 from rest_framework import generics,permissions
-from .serializers import CommunicationSerializer
+from .serializers import CommunicationSerializer,CustomUserSerializer,ProductSerializer,CartItemSerializer,ProductImageSerializer
 from .models import Customer,Product,ProductImage,CartItem,Communication
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from django.contrib.auth import get_user_model
+from rest_framework.authentication import TokenAuthentication
+from django.contrib.auth import authenticate
 
+
+# --------------------------start of communication view ----------------------------------------
 
 class CommunicationView(generics.ListCreateAPIView):
     queryset = Communication.objects.all()
@@ -20,3 +29,80 @@ class AdminReplyView(generics.UpdateAPIView):
     queryset = Communication.objects.all()
     serializer_class = CommunicationSerializer
     permission_classes = [permissions.IsAdminUser]
+
+class DeleteCommunicationView(generics.DestroyAPIView):
+    queryset = Communication.objects.all()
+    serializer_class = CommunicationSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class AdminProductImageView(generics.ListCreateAPIView):
+    queryset = ProductImage.objects.all()
+    serializer_class = ProductImageSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+class AdminProductImageViewDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ProductImage.objects.all()
+    serializer_class = ProductImageSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+# --------------------------start of userRegistratoin and login--------------------------- 
+class UserRegistrationView(generics.CreateAPIView):
+    queryset = get_user_model().objects.all()
+    serializer_class = CustomUserSerializer
+    authentication_classes = [TokenAuthentication]
+
+    def post(self, request, *args, **kwargs):
+        # Remove unnecessary fields from the request data
+        request_data = {
+            'username': request.data.get('username'),
+            'email': request.data.get('email'),
+            'password1': request.data.get('password1'),
+            'password2': request.data.get('password2'),
+        }
+
+        serializer = self.get_serializer(data=request_data)
+        serializer.is_valid(raise_exception=True)
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        # Generate a token for the user
+        user = get_user_model().objects.get(username=request_data['username'])
+        Token.objects.create(user=user)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class UserLoginView(ObtainAuthToken):
+    authentication_classes = [TokenAuthentication]
+
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        if username and password:
+            # Authenticate the user using the provided username and password
+            user = authenticate(username=username, password=password)
+
+            if user:
+                # If the user is authenticated, generate a token
+                token, created = Token.objects.get_or_create(user=user)
+                return Response({'token': token.key, 'user_id': user.id, 'username': user.username})
+
+        return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+
+
+#--------------------------------products -----------------------------------------
+    
+class ProductListView(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+class CartItemView(generics.ListCreateAPIView):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
