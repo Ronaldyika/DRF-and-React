@@ -1,0 +1,6 @@
+__pycache__/
+api/__pycache__/
+api/migrations/0001_initial.py
+api/migrations/__pycache__/
+db.sqlite3
+ecommerce/__pycache__/

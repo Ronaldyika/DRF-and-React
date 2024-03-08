@@ -1,13 +1,15 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser,Group, Permission
 
-class Customer(AbstractUser):
-    pass
+class Customer(models.Model):
+    groups = models.ManyToManyField(Group, related_name='customer_groups')
+    user_permissions = models.ManyToManyField(Permission, related_name='customer_user_permissions')
+
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    price= models.DecimalField(max_digit = 10,decimal_places = 2)
+    price= models.DecimalField(max_digits = 10,decimal_places = 2)
 
     def __str__(self):
         return self.name
