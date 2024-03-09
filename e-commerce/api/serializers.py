@@ -1,9 +1,13 @@
 from rest_framework import serializers
-from .models import Customer,Product,ProductImage,CartItem,Communication
+from .models import Product,ProductImage,CartItem,Communication
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(write_only=True)
+    password1 = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
+
     class Meta:
         model = get_user_model()
         fields = ['username', 'email', 'password1', 'password2']
@@ -37,9 +41,17 @@ class CustomUserSerializer(serializers.ModelSerializer):
         """
         validate_password(value)
         return value
-    
 
-    
+    def create(self, validated_data):
+        """
+        Create a new user using the provided validated data.
+        """
+        password1 = validated_data.pop('password1')
+        validated_data.pop('password2')  # Remove password2 from validated data
+
+        user = get_user_model().objects.create_user(**validated_data, password=password1)
+        return user
+
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product

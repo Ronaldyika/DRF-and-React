@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics,permissions
 from .serializers import CommunicationSerializer,CustomUserSerializer,ProductSerializer,CartItemSerializer,ProductImageSerializer
-from .models import Customer,Product,ProductImage,CartItem,Communication
+from .models import Product,ProductImage,CartItem,Communication
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -9,7 +9,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth import get_user_model
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import authenticate
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 
 
 # --------------------------start of communication view ----------------------------------------
@@ -52,28 +52,21 @@ class UserRegistrationView(generics.CreateAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = CustomUserSerializer
     authentication_classes = [TokenAuthentication]
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
-        # Remove unnecessary fields from the request data
-        request_data = {
-            'username': request.data.get('username'),
-            'email': request.data.get('email'),
-            'password1': request.data.get('password1'),
-            'password2': request.data.get('password2'),
-        }
-
-        serializer = self.get_serializer(data=request_data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
 
         # Generate a token for the user
-        user = get_user_model().objects.get(username=request_data['username'])
+        user = get_user_model().objects.get(username=serializer.validated_data['username'])
         Token.objects.create(user=user)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
+    
 class UserLoginView(ObtainAuthToken):
     authentication_classes = [TokenAuthentication]
 
