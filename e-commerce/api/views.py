@@ -10,21 +10,29 @@ from django.contrib.auth import get_user_model
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated,AllowAny
+from django.contrib.auth.models import User
 
 
 # --------------------------start of communication view ----------------------------------------
 
-class CommunicationView(generics.ListCreateAPIView):
-    queryset = Communication.objects.all()
+class CommunicationView(generics.CreateAPIView):
     serializer_class = CommunicationSerializer
+    # permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        # Automatically set the user based on the authenticated user
-        serializer.save(user=self.request.user)
+        # Assuming you want to associate the communication with a specific product
+        product_id = self.request.data.get('product_id')  # Assuming 'product_id' is sent in the request data
+        product = Product.objects.get(pk=product_id)
 
-    def get_queryset(self):
-        # Limit queryset to messages related to the authenticated user
-        return Communication.objects.filter(user=self.request.user)
+        # Check if the user is authenticated before saving the communication message
+        if self.request.user.is_authenticated:
+            # Set the user, product, and other relevant data
+            serializer.save(user=self.request.user, product=product)
+        else:
+            # Handle the case when the user is not authenticated
+            # You can choose to return an error response or save the communication with a default user
+            default_user = User.objects.get(username='default_user')  # Change 'default_user' to the username of your default user
+            serializer.save(user=default_user, product=product)
     
 class AdminReplyView(generics.UpdateAPIView):
     queryset = Communication.objects.all()
@@ -68,7 +76,6 @@ class UserRegistrationView(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
     
 class UserLoginView(ObtainAuthToken):
-    authentication_classes = [TokenAuthentication]
 
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
