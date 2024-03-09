@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render
 from rest_framework import generics,permissions
 from .serializers import CommunicationSerializer,CustomUserSerializer,ProductSerializer,CartItemSerializer,ProductImageSerializer
 from .models import Product,ProductImage,CartItem,Communication
@@ -19,20 +20,19 @@ class CommunicationView(generics.CreateAPIView):
     serializer_class = CommunicationSerializer
     # permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        # Assuming you want to associate the communication with a specific product
-        product_id = self.request.data.get('product_id')  # Assuming 'product_id' is sent in the request data
-        product = Product.objects.get(pk=product_id)
+    def get_queryset(self):
+        # Only allow users to see their own messages
+        return Communication.objects.filter(user=self.request.user)
 
-        # Check if the user is authenticated before saving the communication message
-        if self.request.user.is_authenticated:
-            # Set the user, product, and other relevant data
-            serializer.save(user=self.request.user, product=product)
-        else:
-            # Handle the case when the user is not authenticated
-            # You can choose to return an error response or save the communication with a default user
-            default_user = User.objects.get(username='default_user')  # Change 'default_user' to the username of your default user
-            serializer.save(user=default_user, product=product)
+    def perform_create(self, serializer):
+        # Assuming 'product_id' is sent in the request data
+        product_id = self.request.data.get('product_id')
+
+        # Attempt to get the Product instance based on the provided product_id
+        product = get_object_or_404(Product, pk=product_id)
+
+        # Set the user, product, and other relevant data
+        serializer.save(user=self.request.user, product=product)
     
 class AdminReplyView(generics.UpdateAPIView):
     queryset = Communication.objects.all()
