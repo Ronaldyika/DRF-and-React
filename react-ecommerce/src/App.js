@@ -6,6 +6,7 @@ import AdminLogin from './components/AdminLogin';
 import Cart from './components/Cart';
 import MessageSection from './components/MessageSection';
 import AdminDashboard from './components/AdminDashboard';
+import ProductList from './components/ProductList';
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="/login" component={UserLogin} />
           <Route path="/admin-login" component={AdminLogin} />
           <Route path="/cart" component={Cart} />
+          <Route path="/ProductList" component={ProductList} />
           <Route path="/messages" component={MessageSection} />
           <Route path="/admin-dashboard" component={AdminDashboard} />
         </Switch>
