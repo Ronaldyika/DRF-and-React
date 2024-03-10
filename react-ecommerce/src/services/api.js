@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8000/api/'; // Replace with your backend API URL
+const API_BASE_URL = 'http://localhost:8000/api/register/'; // Replace with your backend API URL
 
 const headers = {
   'Content-Type': 'application/json',

@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 
-// import api from '../service/api'
+import api from '../service/api'
 
 const UserRegistration =()=>{
     const [formData,setFormData] = useState({
