@@ -15,10 +15,9 @@ from django.contrib.auth.models import User
 
 
 # --------------------------start of communication view ----------------------------------------
-
-class CommunicationView(generics.CreateAPIView):
+class CommunicationView(generics.ListCreateAPIView):
     serializer_class = CommunicationSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         # Only allow users to see their own messages
@@ -33,18 +32,28 @@ class CommunicationView(generics.CreateAPIView):
 
         # Set the user, product, and other relevant data
         serializer.save(user=self.request.user, product=product)
-    
+
 class AdminReplyView(generics.UpdateAPIView):
     queryset = Communication.objects.all()
     serializer_class = CommunicationSerializer
     permission_classes = [permissions.IsAdminUser]
+
+    def get_object(self):
+        # Ensure the user making the request is an admin
+        obj = super().get_object()
+        self.check_object_permissions(self.request, obj)
+        return obj
 
 class DeleteCommunicationView(generics.DestroyAPIView):
     queryset = Communication.objects.all()
     serializer_class = CommunicationSerializer
     permission_classes = [permissions.IsAdminUser]
 
-
+    def get_object(self):
+        # Ensure the user making the request is an admin
+        obj = super().get_object()
+        self.check_object_permissions(self.request, obj)
+        return obj
 class AdminProductImageView(generics.ListCreateAPIView):
     queryset = ProductImage.objects.all()
     serializer_class = ProductImageSerializer

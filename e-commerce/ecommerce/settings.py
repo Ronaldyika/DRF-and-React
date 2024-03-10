@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-# settings.py
+# # settings.py
 CORS_ALLOW_ALL_ORIGINS = True
 
 
