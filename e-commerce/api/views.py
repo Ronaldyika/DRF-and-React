@@ -68,8 +68,6 @@ class AdminProductImageViewDetail(generics.RetrieveUpdateDestroyAPIView):
 class UserRegistrationView(generics.CreateAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = CustomUserSerializer
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
