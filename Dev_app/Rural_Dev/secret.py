@@ -1,0 +1,1 @@
+key = "django-insecure-3corxch==+*ck-p&_-wmgz4m1-0rv@_&kt+kx8*u8m$-9dgn50"
