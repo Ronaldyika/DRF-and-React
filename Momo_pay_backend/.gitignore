@@ -1,0 +1,4 @@
+db.sqlite3
+api_pay/configs.api_pay
+momoPay/configs.py
+api_pay/migrations
